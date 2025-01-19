@@ -1,51 +1,52 @@
 # (C) 2023-2024 RisingOS
+# (C) 2025 Raspberry Project
 
-# RisingOS versioning
+# Project Raspberry versioning
 
 PRODUCT_SOONG_NAMESPACES += \
-    vendor/rising/version
+    vendor/raspberry/version
 
-RISING_FLAVOR := VanillaIceCream
-RISING_VERSION := 6.2
-RISING_CODENAME := Boundless
-RISING_RELEASE_TYPE := STABLE
-RISING_CODE := $(RISING_VERSION)
+RASPBERRY_FLAVOR := VanillaIceCream
+RASPBERRY_VERSION := 15
+RASPBERRY_CODENAME := Candle
+RASPBERRY_RELEASE_TYPE := STABLE
+RASPBERRY_CODE := $(RASPBERRY_VERSION)
 
-RISING_BUILD_DATE := $(shell date +%y%m%d%H)
+RASPBERRY_BUILD_DATE := $(shell date +%y%m%d%H)
 
 CURRENT_DEVICE := $(shell echo "$(TARGET_PRODUCT)" | cut -d'_' -f 2,3)
-MAINTAINER_LIST := $(shell cat vendor/official_devices/OTA/risingOS.maintainers)
-DEVICE_LIST := $(shell cat vendor/official_devices/OTA/risingOS.devices)
+MAINTAINER_LIST := $(shell cat vendor/official_devices/OTA/raspberry.maintainers)
+DEVICE_LIST := $(shell cat vendor/official_devices/OTA/raspberry.devices)
 
-RISING_BUILDTYPE := COMMUNITY
+RASPBERRY_BUILDTYPE := UNOFFICIAL
 
 ifeq ($(WITH_GMS), true)
 	ifeq ($(TARGET_CORE_GMS), true)
-    	RISING_PACKAGE_TYPE ?= CORE
+    	RASPBERRY_PACKAGE_TYPE ?= CORE
 	else
-    	RISING_PACKAGE_TYPE ?= GAPPS
+    	RASPBERRY_PACKAGE_TYPE ?= GAPPS
 	endif
 else
-    RISING_PACKAGE_TYPE ?= VANILLA
+    RASPBERRY_PACKAGE_TYPE ?= VANILLA
 endif
 
 # Build version
-RISING_BUILD_VERSION := $(RISING_VERSION)-$(RISING_RELEASE_TYPE)-$(RISING_BUILD_DATE)-$(RISING_PACKAGE_TYPE)-$(RISING_BUILDTYPE)-$(CURRENT_DEVICE)
+RASPBERRY_BUILD_VERSION := $(RASPBERRY_VERSION)-$(RASPBERRY_RELEASE_TYPE)-$(RASPBERRY_BUILD_DATE)-$(RASPBERRY_PACKAGE_TYPE)-$(RASPBERRY_BUILDTYPE)-$(CURRENT_DEVICE)
 
 # Display version
-RISING_DISPLAY_VERSION := $(RISING_VERSION)-$(RISING_RELEASE_TYPE)-$(RISING_PACKAGE_TYPE)-$(RISING_BUILDTYPE)-$(CURRENT_DEVICE)
+RASPBERRY_DISPLAY_VERSION := $(RASPBERRY_VERSION)-$(RASPBERRY_RELEASE_TYPE)-$(RASPBERRY_PACKAGE_TYPE)-$(RASPBERRY_BUILDTYPE)-$(CURRENT_DEVICE)
 
-# RisingOS properties
+# Project Raspberry properties
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.rising.code=$(RISING_CODENAME) \
-    ro.rising.packagetype=$(RISING_PACKAGE_TYPE) \
-    ro.rising.releasetype=$(RISING_BUILDTYPE) \
-    ro.rising.version?=$(RISING_VERSION) \
-    ro.rising.build.version=$(RISING_BUILD_VERSION) \
-    ro.rising.display.version?=$(RISING_DISPLAY_VERSION) \
-    ro.rising.platform_release_codename=$(RISING_FLAVOR) \
-    ro.rising.device=$(CURRENT_DEVICE) \
-    ro.rising.storage?=$(RISING_STORAGE) \
-    ro.rising.ram?=$(RISING_RAM) \
-    ro.rising.battery?=$(RISING_BATTERY) \
-    ro.rising.display_resolution?=$(RISING_DISPLAY)
+    ro.raspberry.code=$(RASPBERRY_CODENAME) \
+    ro.raspberry.packagetype=$(RASPBERRY_PACKAGE_TYPE) \
+    ro.raspberry.releasetype=$(RASPBERRY_BUILDTYPE) \
+    ro.raspberry.version?=$(RASPBERRY_VERSION) \
+    ro.raspberry.build.version=$(RASPBERRY_BUILD_VERSION) \
+    ro.raspberry.display.version?=$(RASPBERRY_DISPLAY_VERSION) \
+    ro.raspberry.platform_release_codename=$(RASPBERRY_FLAVOR) \
+    ro.raspberry.device=$(CURRENT_DEVICE) \
+    ro.raspberry.storage?=$(RASPBERRY_STORAGE) \
+    ro.raspberry.ram?=$(RASPBERRY_RAM) \
+    ro.raspberry.battery?=$(RASPBERRY_BATTERY) \
+    ro.raspberry.display_resolution?=$(RASPBERRY_DISPLAY)
