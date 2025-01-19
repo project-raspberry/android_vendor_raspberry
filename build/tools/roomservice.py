@@ -2,6 +2,7 @@
 # Copyright (C) 2012-2013, The CyanogenMod Project
 #           (C) 2017-2018,2020-2021, The LineageOS Project
 #           (C) 2023-2025 RisingOS
+#           (C) 2025 Project Raspberry
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,12 +47,12 @@ except:
     device = product
 
 if not depsonly:
-    print("Device %s not found. Attempting to retrieve device repository from RisingTechOSS-devices Github (http://github.com/RisingTechOSS-devices)." % device)
+    print("Device %s not found. Attempting to retrieve device repository from Project Raspberry GitHub (http://github.com/project-raspberry)." % device)
 
 repositories = []
 
 if not depsonly:
-    githubreq = urllib.request.Request("https://raw.githubusercontent.com/RisingTechOSS-devices/official_devices/fifteen/devices.xml")
+    githubreq = urllib.request.Request("https://raw.githubusercontent.com/project-raspberry/official_devices/fifteen/devices.xml")
     try:
         result = ElementTree.fromstring(urllib.request.urlopen(githubreq, timeout=10).read().decode())
     except urllib.error.URLError:
@@ -102,7 +103,7 @@ def get_manifest_path():
         return ".repo/manifests/{}".format(m.find("include").get("name"))
 
 def get_default_revision():
-    m = ElementTree.parse(".repo/manifests/snippets/rising.xml")
+    m = ElementTree.parse(".repo/manifests/snippets/raspberry.xml")
     d = m.find(".//remote[@name='devices']")
     r = d.get('revision')
     return r.replace('refs/heads/', '').replace('refs/tags/', '')
@@ -144,9 +145,9 @@ def is_in_manifest(projectpath):
         if localpath.get("path") == projectpath:
             return True
 
-    # ... and don't forget the rising snippet
+    # ... and don't forget the raspberry snippet
     try:
-        lm = ElementTree.parse(".repo/manifests/snippets/rising.xml")
+        lm = ElementTree.parse(".repo/manifests/snippets/raspberry.xml")
         lm = lm.getroot()
     except:
         lm = ElementTree.Element("manifest")
@@ -174,7 +175,7 @@ def add_to_manifest(repositories):
         repo_remote = repository.get('remote', 'devices')
         print('Checking if %s is fetched from %s' % (repo_target, repo_name))
         if is_in_manifest(repo_target):
-            print('RisingTechOSS-devices/%s already fetched to %s' % (repo_name, repo_target))
+            print('project-raspberry/%s already fetched to %s' % (repo_name, repo_target))
             continue
 
         project = ElementTree.Element("project", attrib = {
@@ -203,7 +204,7 @@ def add_to_manifest(repositories):
 
 def fetch_dependencies(repo_path):
     print('Looking for dependencies in %s' % repo_path)
-    dependencies_path = repo_path + '/rising.dependencies'
+    dependencies_path = repo_path + '/raspberry.dependencies'
     syncable_repos = []
     verify_repos = []
 
@@ -251,7 +252,7 @@ def get_default_or_fallback_revision(repo_name):
 
     try:
         stdout = subprocess.run(
-            ["git", "ls-remote", "-h", "https://:@github.com/RisingTechOSS-devices/" + repo_name],
+            ["git", "ls-remote", "-h", "https://:@github.com/project-raspberry/" + repo_name],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ).stdout.decode()
@@ -306,4 +307,4 @@ else:
             print("Done")
             sys.exit()
 
-print("Repository for %s not found in the RisingTechOSS-devices Github repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device)
+print("Repository for %s not found in the Project Raspberry GitHub repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device)
